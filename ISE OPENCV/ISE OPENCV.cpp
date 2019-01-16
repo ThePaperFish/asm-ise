@@ -488,13 +488,28 @@ int main(int argc, char** argv)
 	for (int n = 20; n > 1; n--)
 	{
 		Mat img_orig = imread("Dataset\\" + to_string(n) + ".jpg");
+
+		//waitKey();
+		imshow("result", img_orig);
 		Mat img_gray = equatImage(img_orig, gray);
+		waitKey();
+		imshow("result", img_gray);
 		Mat img_shar = Masking(img_gray, Masks(sharpen));
+		waitKey();
+		imshow("result", img_shar);
 		Mat img_cont = equatImage(img_shar, contrast, 40);
+		waitKey();
+		imshow("result", img_cont);
 
 		Mat img_ench = EqualizerHist(img_cont);
+		waitKey();
+		imshow("result", img_ench);
 		Mat img_blur = Masking(img_ench, Masks(box_blur,2), 2, 25);
+		waitKey();
+		imshow("result", img_blur);
 		Mat img_soby = Masking(img_blur, Masks(sobely_edge));
+		waitKey();
+		imshow("result", img_soby);
 		Mat img_dila = equatImage(img_soby, binary, 100);
 
 		imshow("gray", img_cont);
@@ -502,8 +517,14 @@ int main(int argc, char** argv)
 		//imshow("gray", img_dila);
 
 		img_dila = morp(img_dila, dilation, plus1, 1);
+		waitKey();
+		imshow("result", img_dila);
 		img_dila = morp(img_dila, eroson, vertical, 4);
+		waitKey();
+		imshow("result", img_dila);
 		img_dila = morp(img_dila, dilation, horizontal, 3);
+		waitKey();
+		imshow("result", img_dila);
 		//img_dila = morp(img_dila, dilation, vertical, 1);
 		//img_dila = morp(img_dila, dilation, horizontal, 1);
 		//
@@ -592,8 +613,8 @@ int main(int argc, char** argv)
 			, dilation, horizontal, 10)
 			, eroson, vertical, 5)
 			, dilation, plus1, 5);*/
-
-		//imshow("result", dst);
+		waitKey();
+		imshow("result", dst);
 		Mat grayplate = plate;
 		float value = OTSU(plate);
 		plate = equatImage(plate, binary, 200);

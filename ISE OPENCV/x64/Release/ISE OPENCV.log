@@ -4,12 +4,12 @@ ISE OPENCV.cpp(129): warning C4244: 'initializing': conversion from 'float' to '
 ISE OPENCV.cpp(130): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 ISE OPENCV.cpp(169): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
 ISE OPENCV.cpp(198): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
-ISE OPENCV.cpp(598): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-ISE OPENCV.cpp(649): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+ISE OPENCV.cpp(619): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+ISE OPENCV.cpp(670): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
   Generating code
   7 of 248 functions ( 2.8%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  ISE OPENCV.vcxproj -> D:\OneDrive\LE\programming\VS2015\ISE OPENCV\x64\Release\ISE OPENCV.exe
-  ISE OPENCV.vcxproj -> D:\OneDrive\LE\programming\VS2015\ISE OPENCV\x64\Release\ISE OPENCV.pdb (Full PDB)
+  ISE OPENCV.vcxproj -> D:\OneDrive\LE\programming\Github\asm-ise\x64\Release\ISE OPENCV.exe
+  ISE OPENCV.vcxproj -> D:\OneDrive\LE\programming\Github\asm-ise\x64\Release\ISE OPENCV.pdb (Full PDB)

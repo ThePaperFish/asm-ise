@@ -1,0 +1,5 @@
+﻿  stdafx.cpp
+  Lesson.cpp
+  ISE OPENCV.cpp
+d:\onedrive\le\programming\github\asm-ise\ise opencv\ise opencv.cpp(28): fatal error C1083: Cannot open include file: 'highgui\highgui.hpp': No such file or directory
+  Generating Code...
