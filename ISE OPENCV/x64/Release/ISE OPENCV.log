@@ -1,13 +1,17 @@
 ﻿  ISE OPENCV.cpp
-ISE OPENCV.cpp(68): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-ISE OPENCV.cpp(129): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-ISE OPENCV.cpp(130): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-ISE OPENCV.cpp(169): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
-ISE OPENCV.cpp(198): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
-ISE OPENCV.cpp(619): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-ISE OPENCV.cpp(670): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+ISE OPENCV.cpp(76): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+ISE OPENCV.cpp(137): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+ISE OPENCV.cpp(138): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+ISE OPENCV.cpp(175): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
+ISE OPENCV.cpp(204): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
+ISE OPENCV.cpp(668): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+ISE OPENCV.cpp(712): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+ISE OPENCV.cpp(671): warning C4477: 'printf' : format string '%-10.2f' requires an argument of type 'double', but variadic argument 3 has type 'int'
+ISE OPENCV.cpp(671): warning C4477: 'printf' : format string '%-10.2f' requires an argument of type 'double', but variadic argument 4 has type 'int'
+ISE OPENCV.cpp(740): warning C4477: 'printf' : format string '%-10d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  ISE OPENCV.cpp(740): note: consider using '%zd' in the format string
   Generating code
-  7 of 248 functions ( 2.8%) were compiled, the rest were copied from previous compilation.
+  7 of 400 functions ( 1.8%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

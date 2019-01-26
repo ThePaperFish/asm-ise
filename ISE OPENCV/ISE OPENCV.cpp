@@ -37,6 +37,14 @@ Link to DLL to execute program successfully(run)
 using namespace std;
 using namespace cv;
 
+double mapvalue(double input, double input_start, double input_end, double output_start, double output_end)
+{
+	double slope = 1.0 * (output_end - output_start) / (input_end - input_start);
+	double output = output_start + slope * (input - input_start);
+
+	return output;
+}
+
 Mat EqualizerHist(Mat Grey)
 {
 	Mat BetterImg = Mat::zeros(Grey.size(), CV_8UC1);;
@@ -141,8 +149,6 @@ int OTSU(Mat Grey)
 }
 
 
-
-
 //Process pixel with math function
 enum equation {	gray,	invert1,	step,	binary,	contrast};
 Mat equatImage(Mat Grey, equation type, float a = 50, int b = 100)
@@ -206,8 +212,6 @@ Mat equatImage(Mat Grey, equation type, float a = 50, int b = 100)
 
 	return processedResult;
 }
-
-
 
 
 // Custom Masking
@@ -478,6 +482,21 @@ Mat morp(Mat Grey, morphology_type type, structure shape, int repeat = 1, int of
 }
 
 
+Mat ColorContours(Mat img_gray,vector<vector<Point>> contours1, vector<Vec4i> hierachy1)
+{
+	Mat result = Mat::zeros(img_gray.size(), CV_8UC3);
+	if (!contours1.empty())
+	{
+		for (int i = 0; i < contours1.size(); i++)
+		{
+			Scalar colour((rand() & 255), (rand() & 255), (rand() & 255));
+			drawContours(result, contours1, i, colour, CV_FILLED, 8, hierachy1);
+		}
+	}
+
+	return result;
+}
+
 
 
 int main(int argc, char** argv)
@@ -485,201 +504,218 @@ int main(int argc, char** argv)
 
 	cout << setprecision(2) ;
 
-	for (int n = 20; n > 1; n--)
+	printf("%-10s%-10s%-10s%-10s%-10s\n", "i", "ratio", "area", "density","-");
+
+	for (int n = 1; n <= 20; n++)
 	{
-		Mat img_orig = imread("Dataset\\" + to_string(n) + ".jpg");
 
-		//waitKey();
-		imshow("result", img_orig);
-		Mat img_gray = equatImage(img_orig, gray);
-		waitKey();
-		imshow("result", img_gray);
-		Mat img_shar = Masking(img_gray, Masks(sharpen));
-		waitKey();
-		imshow("result", img_shar);
-		Mat img_cont = equatImage(img_shar, contrast, 40);
-		waitKey();
-		imshow("result", img_cont);
 
-		Mat img_ench = EqualizerHist(img_cont);
-		waitKey();
-		imshow("result", img_ench);
-		Mat img_blur = Masking(img_ench, Masks(box_blur,2), 2, 25);
-		waitKey();
-		imshow("result", img_blur);
-		Mat img_soby = Masking(img_blur, Masks(sobely_edge));
-		waitKey();
-		imshow("result", img_soby);
-		Mat img_dila = equatImage(img_soby, binary, 100);
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////// IMAGE PROCESS /////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////
 
-		imshow("gray", img_cont);
-		//waitKey();
-		//imshow("gray", img_dila);
+		//Mat img_orig = imread("Dataset\\" + to_string(n) + ".jpg");
+		//Mat img_gray = equatImage(img_orig, gray);
+		//Mat img_ench = EqualizerHist(img_gray);
+		//Mat img_blur = Masking(img_gray, Masks(box_blur,2), 2, 25);
+		//Mat img_soby = Masking(img_blur, Masks(sobely_edge));
+		//Mat img_dila = equatImage(img_soby, binary, 100);
 
-		img_dila = morp(img_dila, dilation, plus1, 1);
-		waitKey();
-		imshow("result", img_dila);
-		img_dila = morp(img_dila, eroson, vertical, 4);
-		waitKey();
-		imshow("result", img_dila);
-		img_dila = morp(img_dila, dilation, horizontal, 3);
-		waitKey();
-		imshow("result", img_dila);
-		//img_dila = morp(img_dila, dilation, vertical, 1);
-		//img_dila = morp(img_dila, dilation, horizontal, 1);
-		//
-		//img_dila = morp(img_dila, dilation, full, 1, 5);
+		//imshow("result", img_dila);
+		////waitKey();
 
 
 
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////// Morphology //////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////
 
-		Mat Blob = img_dila.clone();
+		//img_dila = morp(img_dila, dilation, plus1, 4);
+		//img_dila = morp(img_dila, eroson, vertical, 2);
+		//img_dila = morp(img_dila, dilation, horizontal, 4);
+		//img_dila = morp(img_dila, dilation, plus1, 4);
+
+		//Mat Blob = img_dila.clone();
+
+		vector<vector<Point>> shape_result = vector<vector<Point>>();
+		vector<Vec4i> hierachy_result = vector<Vec4i>();
+
 		vector<vector<Point>> contours1;
 		vector<Vec4i> hierachy1;
-		findContours(img_dila, contours1, hierachy1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE, Point(0, 0));
-		Mat dst = Mat::zeros(img_gray.size(), CV_8UC3);
+		//findContours(img_dila, contours1, hierachy1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE, Point(0, 0));
 
-		if (!contours1.empty())
-		{
-			for (int i = 0; i < contours1.size(); i++)
-			{
-				Scalar colour((rand() & 255), (rand() & 255), (rand() & 255));
-				drawContours(dst, contours1, i, colour, CV_FILLED, 8, hierachy1);
-			}
-		}
-
-		imshow("dila", dst);
+		//imshow("result", ColorContours(img_dila, contours1, hierachy1));
+		////waitKey();
 
 
 
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////// FILTER 1 ////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////
+
+		//Mat plate;
+		//Rect BlobRect;
+		//Scalar black = CV_RGB(0, 0, 0);
+
+		//float max = 0;
+		//float area, density, ratio;
+
+		//for (int i = 0; i < contours1.size(); i++)
+		//{
+		//	BlobRect = boundingRect(contours1[i]);
+
+		//	 ratio = ((float)BlobRect.width / ((float)BlobRect.height + (float)BlobRect.width)) * 100;
+		//	 area = (float)contourArea(contours1[i]);
+		//	 density = area / ((float)BlobRect.height * (float)BlobRect.width);
+
+		//	/*if (contourArea(contours1[i]) > max)
+		//	{
+		//	cout << "area:" << area
+		//	<< "  size:" << contourArea(contours1[i]) << "  Rect: " << ((float)BlobRect.height * (float)BlobRect.width)
+		//	<< "  height: " << (float)BlobRect.height << "  width: " << (float)BlobRect.width << endl;
+
+		//	max = contourArea(contours1[i]);
+		//	}*/
 
 
+		//	if (BlobRect.x < Blob.size().width / 10 || BlobRect.x > Blob.size().width * 9 / 10 || BlobRect.y < Blob.size().height / 10 || BlobRect.y > Blob.size().height * 9 / 10)
+		//	{
+		//		drawContours(img_dila, contours1, i, black, CV_FILLED, 8, hierachy1);
+		//	}
+		//	else if (BlobRect.width < 45 || BlobRect.width > 200 || BlobRect.height> 60 || BlobRect.height < 10)
+		//	{
+		//		drawContours(img_dila, contours1, i, black, CV_FILLED, 8, hierachy1);
+		//	}
+		//	else if (ratio < 55 || ratio > 90 || density < 0.3 || density > 0.85)
+		//	{
+		//		drawContours(img_dila, contours1, i, black, CV_FILLED, 8, hierachy1);
+		//	}
+		//	else
+		//	{
+		//		shape_result.push_back(contours1[i]);
+		//		hierachy_result.push_back(hierachy1[i]);
+		//	}
+		//}
 
-		Mat plate;
-		Rect BlobRect;
-		Scalar black = CV_RGB(0, 0, 0);
-
-		float max = 0;
-
-		float area, density, ratio;
-
-
-		for (int i = 1; i < contours1.size(); i++)
-		{
-			BlobRect = boundingRect(contours1[i]);
-
-			 ratio = ((float)BlobRect.width / ((float)BlobRect.height + (float)BlobRect.width)) * 100;
-			 area = (float)contourArea(contours1[i]);
-			 density = area / ((float)BlobRect.height * (float)BlobRect.width);
-
-			/*if (contourArea(contours1[i]) > max)
-			{
-			cout << "area:" << area
-			<< "  size:" << contourArea(contours1[i]) << "  Rect: " << ((float)BlobRect.height * (float)BlobRect.width)
-			<< "  height: " << (float)BlobRect.height << "  width: " << (float)BlobRect.width << endl;
-
-			max = contourArea(contours1[i]);
-			}*/
+		//imshow("result" , ColorContours(img_dila, shape_result, hierachy_result));
+		////waitKey();
 
 
-			if (BlobRect.x < Blob.size().width / 10 || BlobRect.x > Blob.size().width * 9 / 10 || BlobRect.y < Blob.size().height / 10 || BlobRect.y > Blob.size().height * 9 / 10)
-			{
-				drawContours(dst, contours1, i, black, CV_FILLED, 8, hierachy1);
-			}
-			else if (BlobRect.width < 45 || BlobRect.width > 200 || BlobRect.height> 60 || BlobRect.height < 10)
-			{
-				drawContours(dst, contours1, i, black, CV_FILLED, 8, hierachy1);
-			}
-			else if (ratio < 59 || ratio > 89 || density < 0.35 || density > 0.83)
-			{
-				drawContours(dst, contours1, i, black, CV_FILLED, 8, hierachy1);
-			}
-			else if (ratio * density < 34 || ratio * density > 70)
-			{
-				drawContours(dst, contours1, i, black, CV_FILLED, 8, hierachy1);
-			}
-			else
-			{
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////// Morphology 2 //////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////
 
-				plate = img_gray(BlobRect);
+		//img_dila = morp(img_dila, dilation, plus1, 1);
+		//img_dila = morp(img_dila, eroson, vertical, 8);
+		//img_dila = morp(img_dila, dilation, horizontal, 3);
 
-			}
+		//imshow("result", img_dila);
+		////waitKey();
 
-		}
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////// FILTER 2 ////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////
 
+		//for (int i = 0; i < shape_result.size(); i++)
+		//{
+		//	BlobRect = boundingRect(shape_result[i]);
+
+		//	ratio = ((float)BlobRect.width / ((float)BlobRect.height + (float)BlobRect.width)) * 100;
+		//	area = (float)contourArea(shape_result[i]);
+		//	density = area / ((float)BlobRect.height * (float)BlobRect.width);
+
+		//	printf("%-10d%-10.2f%-10.2f%-10.2f", n, ratio,area,density);
+
+		//	if (ratio < 59 || ratio > 89 || density < 0.35 || density > 0.83)
+		//	{
+		//		drawContours(img_dila, shape_result, i, black, CV_FILLED, 8, hierachy_result);
+		//		printf("%-10s\n", "X");
+		//	}
+		//	else if (ratio * density < 34 || ratio * density > 70)
+		//	{
+		//		drawContours(img_dila, shape_result, i, black, CV_FILLED, 8, hierachy_result);
+		//		printf("%-10s\n", "X");
+		//	}
+		//	else
+		//	{
+		//		plate = img_gray(BlobRect);
+		//		printf("%-10s\n","O");
+		//	}
+		//}
+
+
+		//imshow("result", img_dila);
+		//waitKey();
+
+
+		//char input;
+		//cout << "continue? y/n ";
+		//cin >> input;
+		//if (input == 'n')
+		//{
+		//	continue;
+		//}
 		
 
-		/*dst = morp(morp(morp(dst 
-			, dilation, horizontal, 10)
-			, eroson, vertical, 5)
-			, dilation, plus1, 5);*/
-		waitKey();
-		imshow("result", dst);
-		Mat grayplate = plate;
-		float value = OTSU(plate);
-		plate = equatImage(plate, binary, 200);
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////// CHARACTER CHECKING /////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////
 
-		cout << to_string(value) << endl;
 
-		imshow("result0", plate);
+		Mat plate = equatImage(imread("Dataset\\result_plate\\" + to_string(n) + ".jpg"),gray);
+		Mat grayplate = plate.clone();
 
-		//imwrite("Dataset\\result" + to_string(i) + ".jpg", dst);
+		float value = OTSU(plate) + 50;
+		//printf("%-10d%-10.2f\n", n, value);
+		float ratio = (float)plate.cols / ((float)plate.rows + (float)plate.cols);
+		printf("%-10d%-10.2f%-10.2f%-10.2f", n, ratio, plate.cols, plate.rows);
 
-		ratio = (float)plate.cols / ((float)plate.rows + (float)plate.cols);
+		plate = equatImage(plate, binary, value);
+		imshow("result_plate", plate);
+		//waitKey();
 
-		cout << plate.cols << " " << plate.rows << " " << ratio  << endl;
 
-		if (plate.cols > 95 && ratio >= 0.75)
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////// Morphology //////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+		/*if (plate.cols > 95 && ratio >= 0.75)
 		{
 			plate = morp(plate, eroson, vertical, 1, 2);
 			plate = morp(plate, dilation, vertical, 1);
 		}
 
-		//plate = morp(plate, eroson, horizontal, 1);
-		//plate = morp(plate, dilation, horizontal, 1);
-		//plate = morp(plate, eroson, vertical, 2);
+		plate = morp(plate, eroson, horizontal, 1);
+		plate = morp(plate, dilation, horizontal, 1);
+		plate = morp(plate, eroson, vertical, 2);
 
-		//plate = morp(plate, dilation, plus1, 1);
-		//plate = morp(plate, dilation, plus1, 1);
-
+		plate = morp(plate, dilation, plus1, 1);
+		plate = morp(plate, dilation, plus1, 1);*/
 
 		findContours(plate, contours1, hierachy1, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE, Point(0, 0));
-		dst = Mat::zeros(plate.size(), CV_8UC3);
+		imshow("result_plate", ColorContours(plate, contours1, hierachy1));
+		waitKey();
 
-		if (!contours1.empty())
-		{
-			for (int i = 0; i < contours1.size(); i++)
-			{
-				Scalar colour((rand() & 255), (rand() & 255), (rand() & 255));
-				drawContours(dst, contours1, i, colour, CV_FILLED, 8, hierachy1);
-			}
-		}
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////// FILTER 1 //////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////
 
-		//imshow("result", dst);
-
-
-
-
+		shape_result.clear();
+		hierachy_result.clear();
 
 		for (int i = 0; i < contours1.size(); i++)
 		{
-			BlobRect = boundingRect(contours1[i]);
-
-
+			Rect BlobRect = boundingRect(contours1[i]);
+			Scalar black = CV_RGB(0, 0, 0);
 
 			int ratio = ((float)BlobRect.width / ((float)BlobRect.height + (float)BlobRect.width)) * 100;
 			float area = (float)contourArea(contours1[i]);
 			float density = area / ((float)BlobRect.height * (float)BlobRect.width);
 
-
-			//if (BlobRect.x < Blob.size().width / 100 || BlobRect.x > Blob.size().width * 99 / 100 || BlobRect.y < Blob.size().height / 100 || BlobRect.y > Blob.size().height * 99 / 100)
-			//{
-			//	drawContours(dst, contours1, i, black, CV_FILLED, 8, hierachy1);
-			//}
-			//else 
-			if (BlobRect.width < 5 || BlobRect.width > 15 || BlobRect.height> 25 || BlobRect.height < 10)
+			if (BlobRect.width > 15 || BlobRect.height> 25 || BlobRect.height < 10)
 			{
-				drawContours(dst, contours1, i, black, CV_FILLED, 8, hierachy1);
+				drawContours(plate, contours1, i, black, CV_FILLED, 8, hierachy1);
 			}
 			//else if (ratio < 59 || ratio > 89 || density < 0.35 || density > 0.83)
 			//{
@@ -691,31 +727,22 @@ int main(int argc, char** argv)
 			//}
 			else
 			{
+				shape_result.push_back(contours1[i]);
+				hierachy_result.push_back(hierachy1[i]);
 
 				//plate = img_gray(BlobRect);
-				imshow("character", grayplate(BlobRect));
+				//imshow("character", grayplate(BlobRect));
 				//imwrite("Dataset\\try" + to_string(n) + "-" + to_string(i) + ".jpg", grayplate(BlobRect));
-
-				//cout << n << "\t density:" << density << "\t ratio:" << ratio << "\t a:" << ratio * area
-				//	<< "\t area:" << contourArea(contours1[i]) << "\t Rect: " << ((float)BlobRect.height * (float)BlobRect.width)
-				//	<< "\t height: " << (float)BlobRect.height << "\t width: " << (float)BlobRect.width << endl;
 			}
 
 		}
 
+		printf("%-10d\n", shape_result.size());
 
-
-
-
-		imshow("result2", dst);
-
-
-
-
-
+		imshow("result_plate", plate);
 		waitKey();
 	}
 
-
+	waitKey();
     return 0;
 }
