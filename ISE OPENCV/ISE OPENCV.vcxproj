@@ -136,7 +136,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\Program Files\OpenCV\build\include\opencv2;D:\Program Files\OpenCV\build\include\opencv;D:\Program Files\OpenCV\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Program Files\OpenCV\build\include\opencv2;D:\Program Files\OpenCV\build\include\opencv;D:\Program Files\OpenCV\build\include;D:\OneDrive\LE\programming\Github\leptonica\src;D:\OneDrive\LE\programming\Github\tesseract\src;D:\OneDrive\LE\programming\Github\tesseract\src\api;D:\OneDrive\LE\programming\Github\tesseract\src\ccmain;D:\OneDrive\LE\programming\Github\tesseract\src\ccstruct;D:\OneDrive\LE\programming\Github\tesseract\src\ccutil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

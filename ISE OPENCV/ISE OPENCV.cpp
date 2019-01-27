@@ -25,10 +25,13 @@ Link to DLL to execute program successfully(run)
 #include "cmath"
 #include "iostream"
 #include <iomanip>
+
 #include "highgui\highgui.hpp"
 #include "core\core.hpp"
 #include "imgproc.hpp"
 
+#include "baseapi.h"
+#include "allheaders.h"
 
 
 #define NELEMS(x)  (int)(sizeof(x) / sizeof((x)[0]))
@@ -658,7 +661,7 @@ int main(int argc, char** argv)
 		
 
 		//////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////// CHARACTER CHECKING /////////////////////////////////////////
+		///////////////////////////////// CHARACTER SEPERATE /////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -732,7 +735,7 @@ int main(int argc, char** argv)
 
 				//plate = img_gray(BlobRect);
 				//imshow("character", grayplate(BlobRect));
-				//imwrite("Dataset\\try" + to_string(n) + "-" + to_string(i) + ".jpg", grayplate(BlobRect));
+				imwrite("Dataset\\try" + to_string(n) + "-" + to_string(i) + ".jpg", grayplate(Rect(BlobRect.x - 1, BlobRect.y - 1, BlobRect.width + 2, BlobRect.height + 2)));
 			}
 
 		}
@@ -741,6 +744,15 @@ int main(int argc, char** argv)
 
 		imshow("result_plate", plate);
 		waitKey();
+
+
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////// CHARACTER RECOGNIZE ///////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////
+
+		
+
+
 	}
 
 	waitKey();
